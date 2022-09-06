@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:  'Montserrat Alternates', sans-serif;
+}
+
+
+html{
+    font-size: 45.5%;
+}
+.container{
+    width: 100%;
+    height: 100%;
+    background-color: #bfdbf7;
+    color: #022b3a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.calendar{
+    width: 110rem;
+    height: 100rem;
+    background-color: #e1e5f2;
+
+}
+
+.months{
+    width: 100%;
+    height: 14rem;  
+    background-color: #669bbc;
+    padding: 0 2rem;
+    text-align: center;
+    padding-top: 3%;
+}
+
+.months i {
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+#left{
+    float: left;
+    padding-top: 5%;
+}
+#right{
+    float: right;
+    padding-top: 5%;
+}
+.months h2{
+    font-size: 5rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    margin-bottom: 1rem;
+}
+
+.months p{
+    font-size: 2rem;
+}
+.date{
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.daysOfWeek{
+    width: 100%;
+    height: 5rem;
+    padding: 0 0.4rem;
+    display: flex;
+    align-items: left;
+    justify-content: space-evenly !important;
+}
+.oneDay{
+    width: 14.17rem;
+    display: flex;
+
+}
+
+.daysOfWeek div{
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: 0.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.days{
+    width: 100%;
+    display: flex;
+    align-items: left;
+    flex-wrap: wrap;
+    padding: 0.2rem;
+    justify-content: space-between !important;
+}
+.days>div>span{
+    float: left;
+}
+.prev-date, .next-date{
+    float: left;
+    opacity: 0.5;
+}
+.days div{
+    font-size: 1.4rem;
+    margin: 0.3rem;
+    width: 12%;
+    height: 11.5rem;
+    transition: background-color 0.2s;
+    font-size: 1.5rem;
+}
+
+.days div:hover:not(.today){
+    background-color: #cce3de;
+    border: .2rem solid #022b3a;
+    cursor: pointer;
+}
+.today{
+    background-color: #a2d2ff;
+}
+
+
