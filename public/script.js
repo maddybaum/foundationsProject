@@ -1,3 +1,4 @@
+//creating the calendar
 let clicked = null;
 
 const date = new Date();
@@ -42,9 +43,9 @@ for(let x = firstDayIndex ; x>0; x--){
 
 for(let i = 1; i <= lastDay; i++){
     if(i === new Date().getDate() && date.getMonth() === new Date().getMonth()){
-        days += `<div class = "today">${i}</div>`
+        days += `<div id='${i}' class = "today">${i}</div>`
     } else{
-    days+= `<div class = "daySquare">${i}</div>`
+    days+= `<div id = '${i}' class = "daySquare">${i}</div>`
   
 }}
 
@@ -64,13 +65,55 @@ document.querySelector("#left").addEventListener("click", () => {
     renderCalendar();
   });
 
+  //Adding and modifying events to calendar
 let day = document.querySelectorAll('.daySquare')
 
 day.forEach((elem) => {
-    elem.addEventListener('click', (e) =>{
-        document.querySelector('#addEventModal').style.display = 'block'
+    let dateToAdd = elem.id;
+    elem.addEventListener('click', (event) => {
+        // Storing the date that we just clicked.
+        //let dateToAdd = event.target.id;
+
+        // Show the modal.
+        document.querySelector('#addEventModal').style.display = 'block' 
+      
+        let addEventButton = document.querySelector('#addButton')
+        addEventButton.addEventListener('click', (e) => {
+            
+             let newEvent = {
+                  //date: clicked,
+                  eventTitle: eventTitle.value
+              }
+              axios.post('http://localhost:8765/newEvent', newEvent)
+                  .then((res) => {
+                      console.log(res.data)
+                      // How we would access the day we just clicked.
+                      console.log(document.getElementById(`${dateToAdd}`))
+                      const newEventDate = document.getElementById(`${dateToAdd}`);
+                      //make text element to hold our string coming back from the backend
+                      //data is called eventtitle
+                      //make new p tag
+                      const pEvent = document.createElement('p');
+                      //p tag text is new event title
+                      //due to sequelize, res.data is an array. last event added is going to be the one I am interested in
+                      pEvent.textContent = res.data[res.data.length-1].eventtitle;
+                    //attach pEvent to the div
+                    console.log(pEvent)
+                      newEventDate.innerHTML = `<div class="daySquare">${dateToAdd} ${res.data[res.data.length-1].eventtitle}</div>`
+                      console.log(`#${dateToAdd}`)
+
+                    //newEventDate=null;
+                  //getEvents()  
+                  document.querySelector('#addEventModal').style.display = 'none'
+
+                  
+                  })
+                  
+        })
+        newEventDate=null
     })
-})
+    })
+
 
 let cancelButton = document.querySelectorAll('#cancelButton')
 
@@ -81,23 +124,46 @@ cancelButton.forEach((elem) => {
 })
 let eventTitle = document.querySelector('#eventTitleInput')
 
-function makeEvent(event){
+let addEventButton = document.querySelector('#addButton')
 
-}
-function addEvent() {
+//addEventButton.addEventListener('click', createEvent)
+    
+/*function createEvent() {
     let newEvent = {
-        date: clicked,
-        eventTitle: eventTitle.textContent
+        //date: clicked,
+        eventTitle: eventTitle.value
     }
-    axios.post('http://localhost:2000/newEvent', body)
-        .then(() => {
-
+    axios.post('http://localhost:8765/newEvent', newEvent)
+        .then((res) => {
+            console.log(res.data)
+        getEvents()  
         })
 
+}*/
+
+function getEvents() {
+
+    axios.get('http://localhost:8765/newEvent')
+    .then(res => {
+    res.data.forEach(elem => {
+    let eventCard = 
+`div class = "event-card"><h4> ${elem.eventTitle}</h4></div>`
+})
+    })
 }
 
-   
-        
+let deleteButton = document.querySelectorAll('#deleteButton')
+
+/*function deleteEvent(id) {
+    axios.delete(`http://localhost:8765/newEvent/${id}`)
+        .then(() => getEvents())
+        .catch(err => console.log(err))
+}
+
+deleteButton.forEach((elem) => {
+    elem.addEventListener('click', deleteEvent
+}))*/
+
 
 
 
