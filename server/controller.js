@@ -18,7 +18,8 @@ module.exports = {
     seed: (req, res) => {
         sequelize.query(`create table events (
             event_id serial primary key,
-            eventTitle varchar)
+            eventTitle varchar,
+            eventDate )
         `).then(() => {
             console.log('DB seeded!')
             res.sendStatus(200)
@@ -37,7 +38,7 @@ module.exports = {
             console.log(err);
         })
     },
-    getEvents: (req, res) => {
+    getToDoList: (req, res) => {
         sequelize.query(`SELECT * FROM events`)
         .then((dbResponse) => {
             res.status(200).send(dbResponse[0])
@@ -47,7 +48,8 @@ module.exports = {
         })
     },
 deleteEvent: (req, res) => {
-    const eventid = Number(req.params.id)
+    const eventid = Number(req.params)
+    console.log(eventid)
     console.log(req.params)
     console.log(`the event is ${eventid}`)
     sequelize.query(`DELETE FROM events WHERE event_id = ${eventid};`)

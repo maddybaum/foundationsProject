@@ -6,6 +6,7 @@ console.log(date)
 
 const renderCalendar = () => {
     date.setDate(1);
+    document.querySelector('#addEventModal').style.display = "none"
 }
 let monthDays = document.querySelector('.days')
 
@@ -45,10 +46,11 @@ for(let i = 1; i <= lastDay; i++){
     if(i === new Date().getDate() && date.getMonth() === new Date().getMonth()){
         days += `<div id='${i}' class = "today">${i}</div>`
     } else{
-    days+= `<div id = '${i}' class = "daySquare">${i}</div>`
-  
+    days+=  `<div id='${i}' class = "daySquare">${i}</div>`
+    
 }}
 
+//daySquare
 for(let j = 1; j <= nextDays; j++){
     days += `<div class = "next-date">${j}</div>`;
 
@@ -66,54 +68,8 @@ document.querySelector("#left").addEventListener("click", () => {
   });
 
   //Adding and modifying events to calendar
+
 let day = document.querySelectorAll('.daySquare')
-
-day.forEach((elem) => {
-    let dateToAdd = elem.id;
-    elem.addEventListener('click', (event) => {
-        // Storing the date that we just clicked.
-        //let dateToAdd = event.target.id;
-
-        // Show the modal.
-        document.querySelector('#addEventModal').style.display = 'block' 
-      
-        let addEventButton = document.querySelector('#addButton')
-        addEventButton.addEventListener('click', (e) => {
-            
-             let newEvent = {
-                  //date: clicked,
-                  eventTitle: eventTitle.value
-              }
-              axios.post('http://localhost:8765/newEvent', newEvent)
-                  .then((res) => {
-                      console.log(res.data)
-                      // How we would access the day we just clicked.
-                      console.log(document.getElementById(`${dateToAdd}`))
-                      const newEventDate = document.getElementById(`${dateToAdd}`);
-                      //make text element to hold our string coming back from the backend
-                      //data is called eventtitle
-                      //make new p tag
-                      const pEvent = document.createElement('p');
-                      //p tag text is new event title
-                      //due to sequelize, res.data is an array. last event added is going to be the one I am interested in
-                      pEvent.textContent = res.data[res.data.length-1].eventtitle;
-                    //attach pEvent to the div
-                    console.log(pEvent)
-                      newEventDate.innerHTML = `<div class="daySquare">${dateToAdd} ${res.data[res.data.length-1].eventtitle}</div>`
-                      console.log(`#${dateToAdd}`)
-
-                    //newEventDate=null;
-                  //getEvents()  
-                  document.querySelector('#addEventModal').style.display = 'none'
-
-                  
-                  })
-                  
-        })
-        newEventDate=null
-    })
-    })
-
 
 let cancelButton = document.querySelectorAll('#cancelButton')
 
@@ -122,48 +78,97 @@ cancelButton.forEach((elem) => {
         document.querySelector('#addEventModal').style.display = 'none'
     })
 })
+
+
 let eventTitle = document.querySelector('#eventTitleInput')
 
-let addEventButton = document.querySelector('#addButton')
+let addEventButton = document.querySelector('#addEvent')
+addEventButton.addEventListener('click', displayModal)
 
-//addEventButton.addEventListener('click', createEvent)
-    
-/*function createEvent() {
+function displayModal(){
+    document.querySelector('#addEventModal').style.display = 'block'
+}
+function createEvent(){
     let newEvent = {
-        //date: clicked,
+        eventDate: eventDate.value,
         eventTitle: eventTitle.value
     }
     axios.post('http://localhost:8765/newEvent', newEvent)
-        .then((res) => {
-            console.log(res.data)
-        getEvents()  
-        })
+                  .then((res) => {
+                      console.log(res.data)
+                      // How we would access the day we just clicked.
+                      
+                      let eventDate = document.querySelector('#dates')
+                        console.log(`the selected date is ${eventDate.value}`)
+                        let dateToSplit = eventDate.value;
+                        console.log(`date to split is ${dateToSplit}`)
+                        let splitArr = dateToSplit.split('-')
+                        console.log(splitArr)
+                        
+                        
+                      //make text element to hold our string coming back from the backend
+                      //data is called eventtitle
+                      //make new p tag
+                      const pEvent = document.createElement('p');
+                      //p tag text is new event title
+                      //due to sequelize, res.data is an array. last event added is going to be the one I am interested in
 
-}*/
+                      pEvent.textContent = res.data[res.data.length-1].eventtitle;
+                    //attach pEvent to the div
+                    console.log(pEvent)
+                    let newEventDate = splitArr[2]
+                    //document.querySelector('#dayNumber').value
+                    let dateBox = document.getElementById(`${newEventDate}`)
+                      dateBox.appendChild(pEvent) 
+                    /*let deleteBtn = document.createElement('button')
+                    deleteBtn.setAttribute('id', 'deleteButton')
+                      deleteBtn.innerHtml = 'x'
+                    dateBox.appendChild(deleteBtn)
+                    deleteBtn.onclick = deleteEvent
+                    //newEventDate=null;*/
+                    document.querySelector('#addEventModal').style.display = 'none'
+                   
 
-function getEvents() {
+                  })}
 
-    axios.get('http://localhost:8765/newEvent')
-    .then(res => {
-    res.data.forEach(elem => {
-    let eventCard = 
-`div class = "event-card"><h4> ${elem.eventTitle}</h4></div>`
-})
-    })
-}
-
-let deleteButton = document.querySelectorAll('#deleteButton')
-
-/*function deleteEvent(id) {
+function deleteEvent(id){
     axios.delete(`http://localhost:8765/newEvent/${id}`)
         .then(() => getEvents())
-        .catch(err => console.log(err))
+        .catch(err=>console.log(err))
+
 }
 
-deleteButton.forEach((elem) => {
-    elem.addEventListener('click', deleteEvent
-}))*/
+let daySquare = document.querySelector('.daySquare')
+let saveEventButton = document.querySelector('#saveEvent')
 
+saveEventButton.addEventListener('click', createEvent)
+let dateInput = document.querySelector('#dates')
 
+//TO DO LIST CODE
+let toDoList = document.querySelector('#toDoList')
 
+function getToDoList() {
+
+    list.innerHTML = ''
+    axios.get('http://localhost:8765/newEvent')
+    .then(res => {
+        res.data.forEach(elem => {
+    let toDoListItem = `<div class = "to-do-list"><li class = "item">${elem.eventtitle}<button on click = "deleteEvent"(${elem['event_id']})X</button></li>`
+    list.innerHTML += toDoListItem
+        })
+})
+    }
+function showToDoList(){
+    toDoList.style.display = "block"
+    getToDoList()
+    console.log(dateInput)
+}
+function hideToDoList(){
+    toDoList.style.display = "none"
+}
+let getToDoListBtn = document.querySelector('#todoList')
+getToDoListBtn.addEventListener('click', showToDoList)
+
+let closeToDoListBtn = document.querySelector('#closeToDoList')
+closeToDoListBtn.addEventListener('click', hideToDoList)
 

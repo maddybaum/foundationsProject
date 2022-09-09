@@ -22,7 +22,15 @@
                     <h2>February</h2>
                     <p>Monday August 15, 2022</p>
                 </section>
+                <button id = "addEvent">Add an Event</button>
+                <button id = "todoList">Get to do list</button>
                 
+            </div>
+            <div id = "toDoList">
+                <h3>My To Do List</h3>
+                <button id = "closeToDoList">Close to do list</button>
+                <ul id = "list">
+                </ul>
             </div>
         <div class = "daysOfWeek">
             <div class = "oneDay">Sunday</div>
@@ -54,10 +62,11 @@
             <h2>Add Event</h2>
 
             <input id = "eventTitleInput" placeholder = "Event title">
-
-            <button id ="addButton">Add Event</button>
+            <label for="eventDate">Select a Date</label>
+            <input type = "date" id = "dates"></input>
+            <button id ="saveEvent">Save Event</button>
             <button id = "cancelButton">Cancel</button>
-            <button id = "deleteButton">Delete Event</button>
+            <!--<button id = "deleteButton">Delete Event</button>-->
             </div>
         <div id = "modalBackdrop"></div>
         </div>
