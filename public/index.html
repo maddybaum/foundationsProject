@@ -6,9 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com"> 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap" rel="stylesheet">
+    
     <title>Calendar</title>
 </head>
 <body>
@@ -17,10 +22,10 @@
         <div class = "calendar">
             <div class = "months">
                 <i class ="fas fa-angle-left prev" id = "left"></i>
-                <i class = "fas fa-angle-right next"id = "right"></i>
+                <i class = "fas fa-angle-right next" id = "right"></i>
                 <section class="date">
                     <h2>February</h2>
-                    <p>Monday August 15, 2022</p>
+                    <h3>Monday August 15, 2022</h3>
                 </section>
                 <button id = "addEvent">Add an Event</button>
                 <button id = "todoList">Get to do list</button>
@@ -28,9 +33,15 @@
             </div>
             <div id = "toDoList">
                 <h3>My To Do List</h3>
-                <button id = "closeToDoList">Close to do list</button>
+                <h4>Upcoming Events</h4>
                 <ul id = "list">
                 </ul>
+                <h4>To Do</h4>
+                <ul id = "toDoListList">
+                </ul>
+                <button id = "closeToDoList">Close to do list</button>
+                <button id = "addToDoListItem">Add Items</button>
+                
             </div>
         <div class = "daysOfWeek">
             <div class = "oneDay">Sunday</div>
@@ -61,14 +72,35 @@
         <div id = "addEventModal">
             <h2>Add Event</h2>
 
-            <input id = "eventTitleInput" placeholder = "Event title">
+            <input id = "eventTitleInput" placeholder = "Event title"></input>
             <label for="eventDate">Select a Date</label>
             <input type = "date" id = "dates"></input>
             <button id ="saveEvent">Save Event</button>
             <button id = "cancelButton">Cancel</button>
             <!--<button id = "deleteButton">Delete Event</button>-->
+
             </div>
         <div id = "modalBackdrop"></div>
+        </div>
+    
+        <div id = "addToDoListModal">
+            <h2>Add to do list items</h2>
+            <input id = "toDoListItemInput" placeholder = "Add to list">
+         
+            <input type="radio" id = "highPriority" name="priorityList">
+            <label for = "highPriority">High Priority</label>
+            
+            <input type="radio" id = "medPriority" name="priorityList">
+            <label for = "medPriority">Medium Priority</label>
+            
+            <input type="radio" id = "lowPriority" name="priorityList">
+            <label for = "lowPriority">Low Priority</label>
+
+            <button id ="saveItem">Add</button>
+            <button id = "TDListcancelButton">Cancel</button>
+
+            <input type="hidden" id="checked_radio" name="checked_radio" value="" />
+            <input type="radio" id="foo" name="foo" onclick="document.getElementById('checked_radio').value=this.value;" />
         </div>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 <script src = "script.js"></script>

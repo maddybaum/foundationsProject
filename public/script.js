@@ -18,12 +18,17 @@ date.getMonth()+1, 0).getDay()
 
 const prevLastDay = new Date(date.getFullYear(),
 date.getMonth(), 0).getDate()
+console.log(`previous last day is ${prevLastDay}`)
 
-let firstDayIndex = date.getDay()+1;
+let firstDayIndex = date.getDay()-2;
 
+
+console.log(`the first day index is ${firstDayIndex}`)
 const modalBackdrop = document.querySelector('#modalBackdrop')
 const addEventModal = document.querySelector('#addEventPop')
-const nextDays = 7-lastDayIndex -1
+
+const nextDays = 7 - lastDayIndex - 1;
+
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -35,11 +40,11 @@ console.log(currentMonth);
 let days = "";
 
 document.querySelector('.date h2').innerHTML = months[date.getMonth()];
-document.querySelector('.date p').innerHTML = new Date().toDateString();
+document.querySelector('.date h3').innerHTML = new Date().toDateString();
 
 
-for(let x = firstDayIndex ; x>0; x--){
-    days += `<div class = prev-date>${prevLastDay - x + 1 } </div>`
+for(let x = firstDayIndex; x>0; x--){
+    days += `<div class = prev-date>${prevLastDay - x + 1} </div>`
 }
 
 for(let i = 1; i <= lastDay; i++){
@@ -81,7 +86,7 @@ cancelButton.forEach((elem) => {
 
 
 let eventTitle = document.querySelector('#eventTitleInput')
-
+let eventDate = document.querySelector('#dates')
 let addEventButton = document.querySelector('#addEvent')
 addEventButton.addEventListener('click', displayModal)
 
@@ -90,8 +95,8 @@ function displayModal(){
 }
 function createEvent(){
     let newEvent = {
-        eventDate: eventDate.value,
-        eventTitle: eventTitle.value
+        eventTitle: eventTitle.value,
+        eventDate: eventDate.value
     }
     axios.post('http://localhost:8765/newEvent', newEvent)
                   .then((res) => {
@@ -110,30 +115,24 @@ function createEvent(){
                       //data is called eventtitle
                       //make new p tag
                       const pEvent = document.createElement('p');
-                      //p tag text is new event title
-                      //due to sequelize, res.data is an array. last event added is going to be the one I am interested in
-
-                      pEvent.textContent = res.data[res.data.length-1].eventtitle;
+                    pEvent.textContent = res.data[res.data.length-1].eventtitle;
                     //attach pEvent to the div
                     console.log(pEvent)
                     let newEventDate = splitArr[2]
-                    //document.querySelector('#dayNumber').value
                     let dateBox = document.getElementById(`${newEventDate}`)
-                      dateBox.appendChild(pEvent) 
-                    /*let deleteBtn = document.createElement('button')
-                    deleteBtn.setAttribute('id', 'deleteButton')
-                      deleteBtn.innerHtml = 'x'
-                    dateBox.appendChild(deleteBtn)
-                    deleteBtn.onclick = deleteEvent
-                    //newEventDate=null;*/
+                    dateBox.appendChild(pEvent) 
+                    document.querySelector('#eventTitleInput').value=``
                     document.querySelector('#addEventModal').style.display = 'none'
-                   
+                   getToDoList()
+    //list.innerHTML += toDoListItem
+        })
+        }
 
-                  })}
+            
 
 function deleteEvent(id){
     axios.delete(`http://localhost:8765/newEvent/${id}`)
-        .then(() => getEvents())
+        .then(() => getToDoList())
         .catch(err=>console.log(err))
 
 }
@@ -146,18 +145,25 @@ let dateInput = document.querySelector('#dates')
 
 //TO DO LIST CODE
 let toDoList = document.querySelector('#toDoList')
-
+let list = document.querySelector('#list')
+function struck(ele){
+    ele.style="text-decoration:line-through";
+}
 function getToDoList() {
 
     list.innerHTML = ''
     axios.get('http://localhost:8765/newEvent')
     .then(res => {
         res.data.forEach(elem => {
-    let toDoListItem = `<div class = "to-do-list"><li class = "item">${elem.eventtitle}<button on click = "deleteEvent"(${elem['event_id']})X</button></li>`
+           
+    let toDoListItem = `<div class = "to-do-list"><li class = "item">${elem.eventtitle}<i class="fa-solid fa-trash-can" id = "button" onclick = "deleteEvent(${elem['event_id']})"></i></li>`
     list.innerHTML += toDoListItem
         })
-})
-    }
+        })
+}
+
+
+ //toDoList functionality   
 function showToDoList(){
     toDoList.style.display = "block"
     getToDoList()
@@ -166,9 +172,85 @@ function showToDoList(){
 function hideToDoList(){
     toDoList.style.display = "none"
 }
+
+
 let getToDoListBtn = document.querySelector('#todoList')
 getToDoListBtn.addEventListener('click', showToDoList)
 
 let closeToDoListBtn = document.querySelector('#closeToDoList')
 closeToDoListBtn.addEventListener('click', hideToDoList)
 
+let addToDoListBtn = document.querySelector('#addToDoListItem')
+let addToDoListModal = document.querySelector('#addToDoListModal')
+
+let closeToDoListButton = document.querySelector('#TDListcancelButton')
+closeToDoListButton.addEventListener('click', closeToDoListModal)
+function closeToDoListModal(){
+    addToDoListModal.style.display = "none"
+}
+function showAddToDoListModal(){
+    addToDoListModal.style.display = "block"
+}
+addToDoListBtn.addEventListener('click', showAddToDoListModal)
+
+let toDoListList = document.querySelector('#toDoListList')
+//let toDoListItem = document.querySelector('#toDoListItem')
+let radioSelection = document.getElementsByName('priorityList')
+let toDoListItemInput = document.querySelector('#toDoListItemInput')
+//let prioritySelection = document.querySelector('input[name="priorityList":checked]').value
+
+function addToDoListItem (){
+    let newItem = {
+        item: toDoListItemInput.value,
+        priority: radioSelection.value
+    }
+    axios.post('http://localhost:8765/newItem', newItem)
+                  .then((res) => {
+                      console.log(res.data)
+                      
+                    let TDlistLI = document.createElement('li')
+                      TDlistLI.textContent = res.data[res.data.length-1].item
+                    toDoListList.appendChild(TDlistLI)
+                    let itemPriority = null;
+                    
+                    let editButton = document.createElement('button');
+                    editButton.innerHTML = `<i id = "edit" class="fa fa-pencil" style="font-size:10px"></i>`
+                    toDoListList.appendChild(editButton)
+                    console.log(itemPriority)
+                    document.querySelector('#eventTitleInput').value = ''
+                    
+                    closeToDoListModal()
+                    
+})}
+
+/*function getToDoListItems(){
+    toDoListList.innerHTML = ``
+    axios.get('http://localhost:8765/newItem')
+    .then(res => {
+        res.data.forEach(elem => {
+            console.log(res.data)
+            
+                      //TDlistLI.textContent = res.data[res.data.length-1].item
+                      let toDoListLI = `<li class = "item">${elem.eventtitle}<i id = "edit" fa fa-pencil" style="font-size:10px" onclick = "deleteEvent(${elem['item']})"></i></li>`
+                    toDoListList.innerHTML += toDoListLI
+                    let itemPriority = null;
+                    //<i id = "edit" class="fa fa-pencil" style="font-size:10px"></i>
+                    //let editButton = document.createElement('button');
+                    //editButton.innerHTML = ``
+                    //toDoListList.appendChild(editButton)
+                    
+                    document.querySelector('#eventTitleInput').value = ''
+})
+})
+}*/
+
+saveItem.addEventListener('click', () => {
+    addToDoListItem()
+    //getToDoListItems()
+})
+let editButton = document.querySelector('#edit')
+//editButton.addEventListener('click', editItem)
+
+//function editItem(){
+
+//}
