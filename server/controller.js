@@ -89,14 +89,30 @@ getToDoListItems: (req, res) => {
     })
 },
 editItem: (req, res) => {
-    const { item, priority } = req.params;
-    //const { newItem } = req.body;
+    let itemid = req.params.id;
+    
+    const { newitem, newpriority } = req.body;
+    console.log('req body is below')
+    console.log(req.body)
     //console.log(`${item} ${priority}`)
-    console.log(req.params) //id
+sequelize.query(`UPDATE todolist 
+SET item = '${newitem}', priority = '${newpriority}'
+WHERE item_id = '${itemid}'
+RETURNING *`)
+.then((dbResponse) => {
+    res.status(200).send(dbResponse[0])
+    console.log(itemid) //id
+    console.log(newitem)
+})
+.catch((err) => {
+    console.log(err);
+})
+   
+
 },
 deleteItem: (req, res) => {
-    const { itemid } = Number(req.params)
-    console.log(itemid)
+    let itemid = Number(req.params.id)
+    console.log(`the item id is ${itemid}`)
    
     sequelize.query(`DELETE FROM todolist WHERE item_id = ${itemid};`)
     .then((dbResponse) => {

@@ -158,10 +158,11 @@ function getToDoList() {
            
     let toDoListItem = `<div class = "to-do-list"><li class = "item">${elem.eventtitle}<i class="fa-solid fa-trash-can" id = "button" onclick = "deleteEvent(${elem['event_id']})"></i></li>`
     list.innerHTML += toDoListItem
-        })
-        })
+    
+    }
+        )
+})
 }
-
  
  //toDoList functionality   
  let getToDoListBtn = document.querySelector('#todoList')
@@ -199,14 +200,28 @@ addToDoListBtn.addEventListener('click', showAddToDoListModal)
 
 
 let toDoListList = document.querySelector('#toDoListList')
+
+let priorityList = document.getElementsByName('priorityList')
+//document.querySelector('input[name = "priorityList"]:checked').value
 let radioSelection = document.getElementsByName('priorityList')
 let toDoListItemInput = document.querySelector('#toDoListItemInput')
+
+
 //let prioritySelection = document.querySelector('input[name="priorityList":checked]').value
 
+
 function addToDoListItem (){
+    let checked 
+    for(let i = 0; i < radioSelection.length; i++){
+    if(radioSelection[i].checked === true){
+        checked = radioSelection[i]
+    }
+}
     let newItem = {
+        //id attribute set equal to id from database
+        
         item: toDoListItemInput.value,
-        priority: radioSelection.value
+        priority: checked.value
     }
     axios.post('http://localhost:8765/newItem', newItem)
                   .then((res) => {
@@ -218,7 +233,7 @@ function addToDoListItem (){
                     let itemPriority = null;
                     
                     let editButton = document.createElement('button');
-                    editButton.innerHTML = `<button id = "edit" class="fa fa-pencil" style="font-size:10px"  onclick = "editItem(${elem['item_id']})"></button>`
+                    editButton.innerHTML = `<button id = "edit" class="fa fa-pencil" style="font-size:10px"  onclick = "editItem"></button>`
                     toDoListList.appendChild(editButton)
                     console.log(itemPriority)
                     document.querySelector('#eventTitleInput').value = ''
@@ -231,13 +246,11 @@ function addToDoListItem (){
 
 let editToDoListModal = document.querySelector('#editToDoListModal')
 let editListcancelButton = document.querySelector('#editListcancelButton')
+editListcancelButton.addEventListener('click', hideEditToDoListModal)
 
-/*function showEditToDoListModal(){
+function showEditToDoListModal(){
     editToDoListModal.style.display = "block"
-    let editButtonCreation = document.createElement('button')
-    editButtonCreation.innerHTML = `<button id = "createdEditSaveButton">Save1</button>`
-    editToDoListModal.appendChild(editButtonCreation)
-         }*/
+         }
 
 let createdEditSaveButton = document.querySelector('#createdEditSaveButton')
 //createdEditSaveButton.addEventListener('click', editItem)
@@ -254,7 +267,9 @@ function getToDoListItems(){
             //console.log(res.data)
             
                       //TDlistLI.textContent = res.data[res.data.length-1].item
+                      //let toDoListLI = `<li class = "item">${elem.item}<i id = "edit" class = "fa fa-pencil" style="font-size:10px" onclick = "editItem(${elem['item_id']})"></i><i class="fa-solid fa-trash-can" id = "button" onclick = "deleteItem(${elem['item_id']})"></i></li>`
                       let toDoListLI = `<li class = "item">${elem.item}<i id = "edit" class = "fa fa-pencil" style="font-size:10px" onclick = "editItem(${elem['item_id']})"></i><i class="fa-solid fa-trash-can" id = "button" onclick = "deleteItem(${elem['item_id']})"></i></li>`
+                      toDoListLI.addEventListener('click', crossOffItems)
                     toDoListList.innerHTML += toDoListLI
                     let itemPriority = null;
                     //<i id = "edit" class="fa fa-pencil" style="font-size:10px"></i>
@@ -266,6 +281,16 @@ function getToDoListItems(){
 })
 })
 }
+function crossOffItems(){
+    toDoListClass.forEach(item => {
+        item.parentNode.style = "text-decoration: line-through;"
+    })
+}
+let toDoListClass = document.querySelectorAll('li')
+toDoListClass.forEach(item => {
+    item.addEventListener('click', crossOffItems)
+})
+
 
 saveItem.addEventListener('click', () => {
     addToDoListItem()
@@ -273,44 +298,70 @@ saveItem.addEventListener('click', () => {
 
 document.querySelector('#todoList').addEventListener('click', getToDoListItems)
 
-function editItem(id, newItem){
+let saveButton = document.querySelector('#SaveEditItem')
+    //saveButton.addEventListener('click', editItem)
+
+let editToDoListItemInput = document.querySelector('#editToDoListItemInput')
+let editRadio = document.getElementsByName('editpriorityList')
+
+
+function editItem(id){
     //showEditToDoListModal()
     //let SaveEditItem = document.querySelector('#SaveEditItem')
+    //conditional, if input is empty, don't send request. if it is then do axios put
     editToDoListModal.style.display = "block"
-    let editButtonCreation = document.createElement('button')
-    editButtonCreation.innerHTML = `<button id = "createdEditSaveButton">Save1</button>`
-    let deleteButtonCreation = document.createElement('button')
-    deleteButtonCreation.innerHTML = `<i class="fa-solid fa-trash-can" id = "buttonDeleteItem" onclick = "deleteItem(${item_id})"></i>`
-    editToDoListModal.appendChild(editButtonCreation)
-    let editToDoListItemInput = document.querySelector('#editToDoListItemInput')
 
-    let editItem ={
-        item: editToDoListItemInput.value
+    
+    /*let checkededit
+    for(let i = 0; i < editRadio.length; i++){
+        if(editRadio[i].checked === true){
+            checkededit = editRadio[i]
+        }
+    }*/
+    /*let editItem1 = {
+        newitem: editToDoListItemInput.value,
+        newpriority: checkededit
+    }*/
+
+    
+console.log(`the event id on the front end is ${id}`)
+saveButton.addEventListener('click', () => {
+    let checkededit
+    for(let i = 0; i < editRadio.length; i++){
+        if(editRadio[i].checked === true){
+            checkededit = editRadio[i]
+        }
     }
-    editButtonCreation.addEventListener('click', () => {
+    console.log(checkededit)
+    axios.put(`http://localhost:8765/newItem/${id}`, {
+        newitem: editToDoListItemInput.value,
+        newpriority: checkededit.value
+    }) 
+        //newitem: editToDoListItemInput.value,
+        //newpriority: checkededit.value
+    
+   
+    .then((res) => {
+            editToDoListItemInput.value = ''
+            hideEditToDoListModal()
+            getToDoListItems()
 
-    axios.put(`http://localhost:8765/newItem/${id}`, {editItem})
-        .then((res) => {
-            console.log(res.data)
-            newItem: editToDoListItemInput.value
-            console.log(newItem)
-         
-            getToDoList()
         })
     .catch(err=>console.log(err))
 })
+
 }
 
-//let deleteEditButton = document.querySelector('#deleteEditButton')
-//deleteEditButton.addEventListener('click', deleteItem)
-
 function deleteItem(id){
+    
+    console.log(id)
+    console.log(`the event ID on front end is ${id}`)
     axios.delete(`http://localhost:8765/newItem/${id}`)
     
     .then((res) => {
         getToDoListItems()
-    })
     .catch(err=>console.log(err))
+})
 }
 let editButton = document.querySelector('#editButton')
 let SaveEditItem = document.querySelector('#SaveEditItem')
