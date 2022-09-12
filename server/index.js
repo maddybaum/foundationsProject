@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config();
 const {SERVER_PORT} = process.env
-const {seed, createEvent, getToDoList, deleteEvent, addToDoListItem, getToDoListItems} = require('./controller.js')
+const {seed, createEvent, getToDoList, deleteEvent, addToDoListItem, getToDoListItems, editItem, deleteItem} = require('./controller.js')
 
 app.use(express.json())
 app.use(cors())
@@ -24,3 +24,7 @@ app.listen(SERVER_PORT, () => {
 app.post('/newItem', addToDoListItem)
 
 app.get('/newItem', getToDoListItems)
+
+app.put(`/newItem/:id`, editItem)
+
+app.delete('/newItem/:id', deleteItem)

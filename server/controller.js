@@ -87,4 +87,22 @@ getToDoListItems: (req, res) => {
     .catch((err) => {
         console.log(err)
     })
+},
+editItem: (req, res) => {
+    const { item, priority } = req.params;
+    //const { newItem } = req.body;
+    //console.log(`${item} ${priority}`)
+    console.log(req.params) //id
+},
+deleteItem: (req, res) => {
+    const { itemid } = Number(req.params)
+    console.log(itemid)
+   
+    sequelize.query(`DELETE FROM todolist WHERE item_id = ${itemid};`)
+    .then((dbResponse) => {
+        res.status(200).send(dbResponse[0])
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 }}

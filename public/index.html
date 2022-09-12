@@ -102,6 +102,25 @@
             <input type="hidden" id="checked_radio" name="checked_radio" value="" />
             <input type="radio" id="foo" name="foo" onclick="document.getElementById('checked_radio').value=this.value;" />
         </div>
+        <div id = "editToDoListModal">
+            <h2>Edit to do list item</h2>
+
+            <input id = "editToDoListItemInput" placeholder = "Edit Item"/>
+
+            <input type="radio" id = "highPriority" name="priorityList">
+            <label for = "highPriority">High Priority</label>
+            
+            <input type="radio" id = "medPriority" name="priorityList">
+            <label for = "medPriority">Medium Priority</label>
+            
+            <input type="radio" id = "lowPriority" name="priorityList">
+            <label for = "lowPriority">Low Priority</label>
+
+            <!--button id ="SaveEditItem">Edit</button>-->
+            <button id = "deleteEditButton">Delete Item</button>
+            <button id = "editListcancelButton">Cancel</button>
+        </div>
+
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.min.js"></script>
 <script src = "script.js"></script>
 </body>

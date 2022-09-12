@@ -24,7 +24,7 @@ html{
         font-family: sans-serif;
       }
 
-#addToDoListModal{
+#addToDoListModal, #editToDoListModal{
     display: none;
     z-index: 20;
     padding: 25px;
