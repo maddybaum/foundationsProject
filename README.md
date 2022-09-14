@@ -7,5 +7,5 @@ Get in touch with me at: https://www.linkedin.com/in/madeline-baum/
 
 ![Mainview](https://github.com/maddybaum/foundationsProject/blob/main/Screen%20Shot%202022-09-14%20at%202.27.22%20PM.png)
 
-##Technologies
+**Technologies**
 HTML, CSS, Javascript, Express, Axios, Sequelize, postgreSQL
