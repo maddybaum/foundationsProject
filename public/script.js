@@ -1,6 +1,6 @@
 //creating the calendar
 const date = new Date();
-console.log(date)
+console.log(`teh value for date is ${date}`)
 
 const renderCalendar = () => {
     date.setDate(1);
@@ -11,17 +11,29 @@ let monthDays = document.querySelector('.days')
 const lastDay = new Date(date.getFullYear(),
 date.getMonth()+1, 0).getDate()
 
+const prevLastDay = new Date(date.getFullYear(),
+date.getMonth(), 0).getDate()
+
+let firstDayIndex = 4;
+
+
+console.log(`first day index is ${firstDayIndex}`)
+
+
 const lastDayIndex = new Date(date.getFullYear(),
 date.getMonth()+1, 0).getDay()
 
-const prevLastDay = new Date(date.getFullYear(),
-date.getMonth(), 0).getDate()
+console.log(lastDayIndex)
+
+
+
 console.log(`previous last day is ${prevLastDay}`)
 
-let firstDayIndex = date.getDay()-2;
+
 
 
 console.log(`the first day index is ${firstDayIndex}`)
+
 const modalBackdrop = document.querySelector('#modalBackdrop')
 const addEventModal = document.querySelector('#addEventPop')
 
@@ -30,10 +42,10 @@ const nextDays = 7 - lastDayIndex - 1;
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-let month = date.getMonth();
+//let month = date.getMonth();
 
-let currentMonth = months[month]
-console.log(currentMonth);
+//let currentMonth = months[month]
+//console.log(currentMonth);
 
 let days = "";
 
@@ -60,13 +72,16 @@ for(let j = 1; j <= nextDays; j++){
 }
 monthDays.innerHTML = days;
 
-document.querySelector("#left").addEventListener("click", () => {
-    date.setMonth(date.getMonth() - 1);
+let currentMonth = date.getMonth()
+console.log(`current month is ${currentMonth}`)
+
+document.querySelector(".prev").addEventListener("click", () => {
+    date.setMonth(currentMonth - 1);
     renderCalendar();
   });
   
   document.querySelector("#right").addEventListener("click", () => {
-    date.setMonth(date.getMonth() + 1);
+    date.setMonth(currentMonth + 1);
     renderCalendar();
   });
 
@@ -207,7 +222,6 @@ let radioSelection = document.getElementsByName('priorityList')
 let toDoListItemInput = document.querySelector('#toDoListItemInput')
 
 
-//let prioritySelection = document.querySelector('input[name="priorityList":checked]').value
 
 
 function addToDoListItem (){
@@ -228,18 +242,19 @@ function addToDoListItem (){
                       console.log(res.data)
                       res.data.forEach(elem => {
                     let TDlistLI = document.createElement('li')
-                      TDlistLI.textContent = res.data[res.data.length-1].item
-                    toDoListList.appendChild(TDlistLI)
-                    let itemPriority = null;
+                      //TDlistLI.textContent = res.data[res.data.length-1].item
                     
-                    let editButton = document.createElement('button');
-                    editButton.innerHTML = `<button id = "edit" class="fa fa-pencil" style="font-size:10px"  onclick = "editItem"></button>`
-                    toDoListList.appendChild(editButton)
+                    let itemPriority = null;
+                    let toDoListLI = `<li class = "item">${elem.item}<i id = "edit" class = "fa fa-pencil" style="font-size:10px" onclick = "editItem(${elem['item_id']})"></i><i class="fa-solid fa-trash-can" id = "button" onclick = "deleteItem(${elem['item_id']})"></i></li>`
+                      
+                    toDoListList.innerHTML += toDoListLI
+                   document.querySelector('#editToDoListItemInput').value = ''
+                 
                     console.log(itemPriority)
-                    document.querySelector('#eventTitleInput').value = ''
+                    
                     
                     closeToDoListModal()
-                    
+                    document.querySelector('#toDoListItemInput').value = ``
 })
                   })}
 
@@ -264,18 +279,12 @@ function getToDoListItems(){
     axios.get('http://localhost:8765/newItem')
     .then(res => {
         res.data.forEach(elem => {
-            //console.log(res.data)
             
-                      //TDlistLI.textContent = res.data[res.data.length-1].item
-                      //let toDoListLI = `<li class = "item">${elem.item}<i id = "edit" class = "fa fa-pencil" style="font-size:10px" onclick = "editItem(${elem['item_id']})"></i><i class="fa-solid fa-trash-can" id = "button" onclick = "deleteItem(${elem['item_id']})"></i></li>`
-                      let toDoListLI = `<li class = "item">${elem.item}<i id = "edit" class = "fa fa-pencil" style="font-size:10px" onclick = "editItem(${elem['item_id']})"></i><i class="fa-solid fa-trash-can" id = "button" onclick = "deleteItem(${elem['item_id']})"></i></li>`
-                      toDoListLI.addEventListener('click', crossOffItems)
+                     let toDoListLI = `<li class = "item">${elem.item}<i id = "edit" class = "fa fa-pencil" style="font-size:10px" onclick = "editItem(${elem['item_id']})"></i><i class="fa-solid fa-trash-can" id = "button" onclick = "deleteItem(${elem['item_id']})"></i></li>`
+                      
                     toDoListList.innerHTML += toDoListLI
                     let itemPriority = null;
-                    //<i id = "edit" class="fa fa-pencil" style="font-size:10px"></i>
-                    //let editButton = document.createElement('button');
-                    //editButton.innerHTML = ``
-                    //toDoListList.appendChild(editButton)
+                   
                     
                     document.querySelector('#eventTitleInput').value = ''
 })
@@ -306,22 +315,12 @@ let editRadio = document.getElementsByName('editpriorityList')
 
 
 function editItem(id){
-    //showEditToDoListModal()
-    //let SaveEditItem = document.querySelector('#SaveEditItem')
+    
     //conditional, if input is empty, don't send request. if it is then do axios put
     editToDoListModal.style.display = "block"
 
     
-    /*let checkededit
-    for(let i = 0; i < editRadio.length; i++){
-        if(editRadio[i].checked === true){
-            checkededit = editRadio[i]
-        }
-    }*/
-    /*let editItem1 = {
-        newitem: editToDoListItemInput.value,
-        newpriority: checkededit
-    }*/
+    
 
     
 console.log(`the event id on the front end is ${id}`)
@@ -337,9 +336,7 @@ saveButton.addEventListener('click', () => {
         newitem: editToDoListItemInput.value,
         newpriority: checkededit.value
     }) 
-        //newitem: editToDoListItemInput.value,
-        //newpriority: checkededit.value
-    
+        
    
     .then((res) => {
             editToDoListItemInput.value = ''
@@ -365,6 +362,3 @@ function deleteItem(id){
 }
 let editButton = document.querySelector('#editButton')
 let SaveEditItem = document.querySelector('#SaveEditItem')
-//SaveEditItem.addEventListener('click', editItem)
-
-//editButton.addEventListener('click', showAddToDoListModal)

@@ -221,3 +221,8 @@ p{
     width: 1%;
     margin-left: 2%;
 }
+button{
+    background-color: #f8edeb;
+    border-radius: 20%;
+    padding: 2px;
+}
