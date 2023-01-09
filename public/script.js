@@ -1,6 +1,6 @@
 //creating the calendar
 const date = new Date();
-console.log(`teh value for date is ${date}`)
+console.log(`the value for date is ${date}`)
 
 const renderCalendar = () => {
     date.setDate(1);
